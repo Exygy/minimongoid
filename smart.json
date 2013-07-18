@@ -1,0 +1,12 @@
+{
+  "name": "minimongoid",
+  "description": "Mongoid inspired model architecture",
+  "author": "Dave Kaplan <dave@exygy.com>",
+  "version": "0.7.1",
+  "homepage": "https://github.com/exygy/minimongoid",
+  "git": "https://github.com/exygy/minimongoid.git",
+  "packages": {
+    "underscore-inflection": {},
+    "underscore-string": {}
+  }
+}

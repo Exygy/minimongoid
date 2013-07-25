@@ -4,13 +4,10 @@ minimongoid
 Mongoid inspired model architecture for your Meteor apps. 
 
 ## CoffeeScript
-
-First things first -- it is highly encouraged to use [CoffeeScript](http://coffeescript.org/) with minimongoid. Even if your entire app is written in JavaScript, and only your models are written in CS, that would suit you just fine. You can use the convertor on the CS homepage if you'd like to see the resulting JS output.
+First things first -- it is highly encouraged to use [CoffeeScript](http://coffeescript.org/) with minimongoid, simply because the class inheritance syntax in CoffeeScript is much cleaner and easier to use. Even if your entire app is written in JavaScript, and only your models are written in CS, that would suit you just fine (the example project is done this way). You can use the converter on the CS homepage if you'd like to see the resulting JS output.
 
 # Usage
-
 Like most things in life, it's always easier to demonstrate by example. You can find a working example project in the /example directory. The below comes from the /lib/models.coffee file in that project. Note that it's probably a good idea to stick models somewhere like /lib so they get loaded first -- and yes, you can use these same models on both client and server!
-
 
     class @Recipe extends Minimongoid
       # indicate which collection to use
@@ -60,15 +57,13 @@ Like most things in life, it's always easier to demonstrate by example. You can 
         @user_id == Meteor.userId()
 
 
-
+TODO: Add more explanation...
 
 
 # Testing
-
 There are some stupid simple tests that you can run:
 
     mrt test-packages ./
-
 
 -----
 Created by Dave Kaplan, and originally derived from Mario Uher's [minimongoid](https://github.com/haihappen/minimongoid). 

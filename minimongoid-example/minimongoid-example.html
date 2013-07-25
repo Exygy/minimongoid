@@ -1,0 +1,122 @@
+<head>
+  <title>minimongoid-example</title>
+</head>
+
+<body>
+  <div class="container">
+    {{> main}}
+  </div>
+</body>
+
+
+<!-- Main template --> 
+<template name="main">
+  {{#if currentUserId}}
+    <ul class="nav nav-tabs" id="tabs">
+      <li class="active">
+        <a href="#recipes" data-toggle="tab">My Recipes</a>
+      </li>
+      <li>
+        <a href="#friends" data-toggle="tab">My Friends</a>
+      </li>
+      <li>
+        <a href="#friends_recipes" data-toggle="tab">My Friends' Recipes</a>
+      </li>
+      <li style="float:right; margin-right: 100px;">
+        {{loginButtons}}
+      </li>
+    </ul>
+    
+    <div class="tab-content">
+        <div id="recipes" class="active tab-pane">
+          {{> recipes}}
+        </div>
+        <div id="friends" class="tab-pane">
+          {{> friends}}
+        </div>
+        <div id="friends_recipes" class="tab-pane">
+          {{> friends_recipes}}
+        </div>
+    </div>
+  {{else}}
+    {{loginButtons}}
+  {{/if}}
+</template>
+
+<!-- Recipes -->
+<template name="recipes">
+  <h1>My Recipes</h1>
+  {{#each my_recipes}}
+    {{> recipe}}
+  {{/each}}
+
+  <div>
+    <hr/>
+    <strong>Create a recipe!</strong>
+    <input id="recipe-name" type="text" />
+    <input id="recipe-save" type="submit" />
+  </div>
+</template>
+
+<!-- Friends -->
+<template name="friends">
+  <strong>Choose your friends:</strong>
+  <ul>
+  {{#each other_users}}
+    <li id="friends">
+      {{#if myFriend}}
+        <a href="#" class="btn btn-success">{{username}}</a>
+      {{else}}
+        <a href="#" class="btn btn-info">{{username}}</a>
+      {{/if}}
+    </li>
+  {{/each}}
+  </ul>
+</template>
+
+<!-- Friends' Recipes -->
+<template name="friends_recipes">
+  <strong>My friends' recipes</strong>
+    {{#each recipes}}
+      {{> recipe}}
+    {{/each}}
+</template>
+
+
+
+<!-- Recipe -->
+<template data-recipe-id="{{id}}" name="recipe">
+  <div class="well">
+    <h2>{{name}}</h2>
+    <p>Cook time: {{cooking_time}}</p>
+    <p>{{spicy}}</p>
+    <h4>Ingredients:</h4>
+    {{#if ingredients}}
+      <ul>
+      {{#each ingredients}}
+        {{> ingredient}}
+      {{/each}}
+      </ul>
+    {{else}}
+      <p>None.</p>
+    {{/if}}
+
+    {{#if myRecipe}}
+    <input class="ingredient-quantity" size="4" type="number" style="width:50px;" />
+    <input class="ingredient-name" type="text" />
+    <input class="ingredient-save" type="submit" />
+    {{/if}}
+  </div>
+</template>
+
+
+<!-- Ingredient -->
+<template name="ingredient">
+  <li>
+    {{nice_quantity}} of {{name}} 
+
+    {{#if myRecipe}}
+      &nbsp; <a class="del" href="#">&times;</a>
+    {{/if}}
+  </li>
+</template>

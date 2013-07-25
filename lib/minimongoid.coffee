@@ -26,7 +26,7 @@ class @Minimongoid
       @[@constructor.embedded_in] = parent
 
     for name, value of attr
-      continue if name.match(/^_id/) #if name.match(/^_/)
+      continue if name.match(/^_id/)
       if name.match(/_id$/) and (value instanceof Meteor.Collection.ObjectID)
         @[name] = value._str
       else if _.findWhere(@constructor.embeds_many, {name: name})

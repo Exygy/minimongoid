@@ -1,0 +1,29 @@
+{
+  "meteor": {
+    "git": "https://github.com/meteor/meteor.git",
+    "branch": "master",
+    "commit": "2e78d0d110443ac6fb9471e6be1c136f15f03fd2"
+  },
+  "dependencies": {
+    "basePackages": {
+      "minimongoid": {}
+    },
+    "packages": {
+      "minimongoid": {
+        "git": "https://github.com/Exygy/minimongoid.git",
+        "tag": "v0.7.3",
+        "commit": "cde385ce5b82eafa7deec570ee8c4f47fa571560"
+      },
+      "underscore-inflection": {
+        "git": "https://github.com/pius/meteor-underscore-inflection.git",
+        "tag": "v1.0.0",
+        "commit": "fe5f71cf03f10ba1bf9483a85e8290c9db028ea2"
+      },
+      "underscore-string": {
+        "git": "https://github.com/possibilities/meteor-underscore-string.git",
+        "tag": "v2.2.0rc.1",
+        "commit": "dec21fac23310daf76dc19f246749e7beb48af03"
+      }
+    }
+  }
+}

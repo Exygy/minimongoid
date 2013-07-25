@@ -53,8 +53,14 @@
   <div>
     <hr/>
     <strong>Create a recipe!</strong>
-    <input id="recipe-name" type="text" />
-    <input id="recipe-save" type="submit" />
+    <div class="control-group" id="recipe-form">
+      <label class="control-label" for="recipe-name">Recipe name</label>
+      <div class="controls">
+        <input id="recipe-name" type="text" />
+        <input id="recipe-save" type="submit" />
+        <span class="help-inline"></span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -85,9 +91,9 @@
 
 
 <!-- Recipe -->
-<template data-recipe-id="{{id}}" name="recipe">
+<template name="recipe">
   <div class="well">
-    <h2>{{name}}</h2>
+    <h2>{{name}} {{#if myRecipe}}<a class="del" href="#">&times;</a>{{/if}}</h2>
     <p>Cook time: {{cooking_time}}</p>
     <p>{{spicy}}</p>
     <h4>Ingredients:</h4>

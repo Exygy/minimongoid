@@ -15,6 +15,10 @@ if (Meteor.isClient) {
         user_id: Meteor.userId(),
         name:    $(t.find('#recipe-name')).val()
       });
+      if (Recipe.errors) {
+        $(t.find('#recipe-form')).addClass('error');
+        $(t.find('#recipe-form .help-inline')).html(Recipe.error_message());
+      }
     }
   });
 
@@ -52,7 +56,13 @@ if (Meteor.isClient) {
       this.push({
         ingredients: ingredient
       });
-      // console.log(this)
+    },
+    'click .del' : function(e, t) {
+      e.preventDefault();
+      var recipe = this;
+      $(t.firstNode).fadeOut(function() {
+        recipe.destroy();
+      })
     }
   });
 
@@ -90,11 +100,9 @@ if (Meteor.isServer) {
 
   Meteor.users.allow({
     update: function(user_id, doc, fields, modifier) {
-      console.log(doc)
       if (doc._id !== Meteor.userId()) {
         return false;
       } else {
-        console.log('allowed', modifier)
         return true; 
       }
     }
@@ -119,11 +127,9 @@ if (Meteor.isServer) {
 
 
   Accounts.onCreateUser(function(options, user) {
-    // We still want the default hook's 'profile' behavior.
+    // give the user a "username" based on the initial part of their email address
     user.username = User.init(user).email().split('@')[0];
-    console.log(user);
-    if (options.profile)
-      user.profile = options.profile;
+    if (options.profile) user.profile = options.profile;
     return user;
   });
 

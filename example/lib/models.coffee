@@ -13,28 +13,60 @@ class @User extends Minimongoid
   ]
 
   # instance methods 
+  # return true if user is friends with User where id==user_id
   friendsWith: (user_id) ->
     _.contains @friend_ids, user_id
+  # return true if user is friends with the current logged in user
   myFriend: ->
     User.current().friendsWith(@id)
+  # grab the first email off the emails array
   email: ->
     if (@emails and @emails.length) then @emails[0].address else ''
 
 class @Recipe extends Minimongoid
+  # indicate which collection to use
   @_collection: new Meteor.Collection('recipes')
+
+  # model relations
   @belongs_to: [
     {name: 'user'}
   ]
   @embeds_many: [
     {name: 'ingredients'}
   ]
+
+  # model defaults
   @defaults:
     name: ''
     cooking_time: '30 mins'
 
+  # titleize the name before creation   
+  @before_create: (attr) ->
+    attr.name = _.titleize(attr.name)
+    return attr
+
+  # class methods
+  # Find me all recipes with an ingredient that starts with "zesty"
+  @zesty: ->
+    @where({'ingredients.name': /^zesty/i})
+
+  @error_message: ->
+    msg = ''
+    for i in @errors
+      for key,value of i
+        msg += "<strong>#{key}:</strong> #{value}"
+    msg
+
+  # Add some validation parameters. As long as the @error() method is triggered, then validation will fail
+  validate: ->
+    unless @name and @name.length > 3
+      @error('name', 'Recipe name is required and should be longer than 3 letters.')
+
+  # instance methods
   spicy: ->
     "That's a spicy #{@name}!"
 
+  # is this one of my personal creations? T/F
   myRecipe: ->
     @user_id == Meteor.userId()
 

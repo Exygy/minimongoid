@@ -66,12 +66,12 @@
 
 <!-- Friends -->
 <template name="friends">
-  <strong>Choose your friends:</strong>
-  <ul>
+  <h2>Choose your friends:</h2>
+  <ul style="margin:10px 0;">
   {{#each other_users}}
-    <li id="friends">
+    <li id="friends" style="list-style:none;margin-bottom:10px;">
       {{#if myFriend}}
-        <a href="#" class="btn btn-success">{{username}}</a>
+        <a href="#" class="btn btn-large btn-success">{{username}}</a>
       {{else}}
         <a href="#" class="btn btn-info">{{username}}</a>
       {{/if}}
@@ -82,10 +82,9 @@
 
 <!-- Friends' Recipes -->
 <template name="friends_recipes">
-  <strong>My friends' recipes</strong>
-    {{#each recipes}}
-      {{> recipe}}
-    {{/each}}
+  {{#each recipes}}
+    {{> recipe}}
+  {{/each}}
 </template>
 
 
@@ -93,7 +92,14 @@
 <!-- Recipe -->
 <template name="recipe">
   <div class="well">
-    <h2>{{name}} {{#if myRecipe}}<a class="del" href="#">&times;</a>{{/if}}</h2>
+    <h2>
+      {{name}} 
+      {{#if myRecipe}}
+        <a class="del" href="#">&times;</a>
+      {{else}}
+        <span style="font-size:14px;">according to <em style="color:#188181">{{creator_name}}</em></span>
+      {{/if}}
+    </h2>
     <p>Cook time: {{cooking_time}}</p>
     <p>{{spicy}}</p>
     <h4>Ingredients:</h4>

@@ -81,10 +81,10 @@ if (Meteor.isClient) {
 if (Meteor.isServer) {
   Meteor.startup(function () {
     // code to run on server at startup
+
+    // back to the basics, delete everything
     // User.destroyAll();
     // Recipe.destroyAll();
-
-    Meteor.users.update('7R5hDc8tEENKnprC5', { '$addToSet': { friend_ids: 'RibuoMwzYqoScQe9F' } })
 
   });
 

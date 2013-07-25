@@ -43,7 +43,7 @@ class @Recipe extends Minimongoid
   # titleize the name before creation   
   @before_create: (attr) ->
     attr.name = _.titleize(attr.name)
-    return attr
+    attr
 
   # class methods
   # Find me all recipes with an ingredient that starts with "zesty"
@@ -69,6 +69,9 @@ class @Recipe extends Minimongoid
   # is this one of my personal creations? T/F
   myRecipe: ->
     @user_id == Meteor.userId()
+
+  creator_name: ->
+    @r('user').username
 
 
 class @Ingredient extends Minimongoid

@@ -1,5 +1,6 @@
 if (Meteor.isClient) {
   Meteor.subscribe('userData');
+  Meteor.subscribe('recipes');
 
   Template.main.currentUserId = function () {
     return Meteor.userId();
@@ -95,6 +96,9 @@ if (Meteor.isServer) {
         friend_ids: 1
       }
     });
+  });
+  Meteor.publish('recipes', function() {
+    return Recipe.find();
   });
 
 

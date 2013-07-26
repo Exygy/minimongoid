@@ -6,13 +6,13 @@
   },
   "dependencies": {
     "basePackages": {
-      "minimongoid": {}
+      "minimongoid": {
+        "path": ".."
+      }
     },
     "packages": {
       "minimongoid": {
-        "git": "https://github.com/Exygy/minimongoid.git",
-        "tag": "v0.7.3",
-        "commit": "cde385ce5b82eafa7deec570ee8c4f47fa571560"
+        "path": ".."
       },
       "underscore-inflection": {
         "git": "https://github.com/pius/meteor-underscore-inflection.git",

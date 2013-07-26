@@ -14,9 +14,9 @@ class @Minimongoid
         @id = attr._id
 
     # initialize relation arrays to be an empty array, if they don't exist 
-    for has_many in @constructor.has_many.concat(@constructor.has_and_belongs_to_many)
+    for habtm in @constructor.has_and_belongs_to_many
       # e.g. matchup.game_ids = []
-      identifier = "#{_.singularize(has_many.name)}_ids"
+      identifier = "#{_.singularize(habtm.name)}_ids"
       @[identifier] ||= []
     # initialize relation arrays to be an empty array, if they don't exist 
     for embeds_many in @constructor.embeds_many
@@ -65,7 +65,9 @@ class @Minimongoid
       if relation == has_many.name
         selector = {}
         unless foreign_key = has_many.foreign_key
-          foreign_key = "#{_.singularize(@constructor.name.toLowerCase())}_id"
+          # can't use @constructor.name in production because it's been minified to "n"
+          # foreign_key = "#{_.singularize(@constructor.name.toLowerCase())}_id"
+          return []
         if @constructor._object_id
           selector[foreign_key] = new Meteor.Collection.ObjectID @id
         else

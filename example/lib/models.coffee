@@ -6,7 +6,7 @@ class @User extends Minimongoid
   @current: ->
     User.init(Meteor.user()) if Meteor.userId()
   @has_many: [
-    {name: 'recipes'}
+    {name: 'recipes', foreign_key: 'user_id'}
   ]
   @has_and_belongs_to_many: [
     {name: 'friends', class_name: 'User'}

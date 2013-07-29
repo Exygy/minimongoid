@@ -187,7 +187,7 @@ class @Minimongoid
     new @(attr, parent)
 
   @create: (attr) ->
-    attr.created_at = new Date()
+    attr.createdAt = new Date().getTime()
     attr = @before_create(attr) if @before_create
     doc = @init(attr)
     doc = doc.save(attr)
@@ -205,7 +205,7 @@ class @Minimongoid
       @init doc
 
   @last: (selector = {}, options = {}) ->
-    if doc = @_collection.findOne(selector, sort: created_at: -1)
+    if doc = @_collection.findOne(selector, sort: createdAt: -1)
       @init doc
 
   @all: (options) ->

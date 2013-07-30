@@ -9,52 +9,54 @@ First things first -- it is highly encouraged to use [CoffeeScript](http://coffe
 # Usage
 Like most things in life, it's always easier to demonstrate by example. You can find a working example project in the /example directory. The below comes from the /lib/models.coffee file in that project. Note that it's probably a good idea to stick models somewhere like /lib so they get loaded first -- and yes, you can use these same models on both client and server!
 
-    class @Recipe extends Minimongoid
-      # indicate which collection to use
-      @_collection: new Meteor.Collection('recipes')
+```coffee
+class @Recipe extends Minimongoid
+# indicate which collection to use
+@_collection: new Meteor.Collection('recipes')
 
-      # model relations
-      @belongs_to: [
-        {name: 'user'}
-      ]
-      @embeds_many: [
-        {name: 'ingredients'}
-      ]
+# model relations
+@belongs_to: [
+  {name: 'user'}
+]
+@embeds_many: [
+  {name: 'ingredients'}
+]
 
-      # model defaults
-      @defaults:
-        name: ''
-        cooking_time: '30 mins'
+# model defaults
+@defaults:
+  name: ''
+  cooking_time: '30 mins'
 
-      # titleize the name before creation   
-      @before_create: (attr) ->
-        attr.name = _.titleize(attr.name)
-        attr
+# titleize the name before creation   
+@before_create: (attr) ->
+  attr.name = _.titleize(attr.name)
+  attr
 
-      # class methods
-      # Find me all recipes with an ingredient that starts with "zesty"
-      @zesty: ->
-        @where({'ingredients.name': /^zesty/i})
+# class methods
+# Find me all recipes with an ingredient that starts with "zesty"
+@zesty: ->
+  @where({'ingredients.name': /^zesty/i})
 
-      @error_message: ->
-        msg = ''
-        for i in @errors
-          for key,value of i
-            msg += "<strong>#{key}:</strong> #{value}"
-        msg
+@error_message: ->
+  msg = ''
+  for i in @errors
+    for key,value of i
+      msg += "<strong>#{key}:</strong> #{value}"
+  msg
 
-      # Add some validation parameters. As long as the @error() method is triggered, then validation will fail
-      validate: ->
-        unless @name and @name.length > 3
-          @error('name', 'Recipe name is required and should be longer than 3 letters.')
+# Add some validation parameters. As long as the @error() method is triggered, then validation will fail
+validate: ->
+  unless @name and @name.length > 3
+    @error('name', 'Recipe name is required and should be longer than 3 letters.')
 
-      # instance methods
-      spicy: ->
-        "That's a spicy #{@name}!"
+# instance methods
+spicy: ->
+  "That's a spicy #{@name}!"
 
-      # is this one of my personal creations? T/F
-      myRecipe: ->
-        @user_id == Meteor.userId()
+# is this one of my personal creations? T/F
+myRecipe: ->
+  @user_id == Meteor.userId()
+```
 
 
 TODO: Add more explanation...

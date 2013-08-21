@@ -59,8 +59,12 @@ myRecipe: ->
 ```
 
 
-TODO: Add more explanation...
+# What's up with this "r" method?
+In order to query for your relations that are *not* embedded models, you have to use the "related" method (with a shorthand alias, "r"). So in the above example, assuming `recipe` contained a Recipe model, I would have to use `recipe.related('user')` or the shorter `recipe.r('user')` in order to find the user. For embeded models, because they are already contained in the document itself, you can just use those as usual, e.g. `recipe.ingredients`. 
 
+This may be shortened in the future to allow you to do `recipe.user()`, but for now this is how it works. 
+
+If you're interested in learning more about why we can't just have `recipe.user` or why it's set up this way with the `r` method, check out [this issue](https://github.com/Exygy/minimongoid/issues/2).
 
 # Testing
 There are some stupid simple tests that you can run:

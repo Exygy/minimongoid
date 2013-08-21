@@ -66,8 +66,7 @@ class @Minimongoid
         selector = {}
         unless foreign_key = has_many.foreign_key
           # can't use @constructor.name in production because it's been minified to "n"
-          # foreign_key = "#{_.singularize(@constructor.name.toLowerCase())}_id"
-          return []
+          foreign_key = "#{_.singularize(@constructor.to_s().toLowerCase())}_id"
         if @constructor._object_id
           selector[foreign_key] = new Meteor.Collection.ObjectID @id
         else
@@ -88,7 +87,8 @@ class @Minimongoid
           return global[habtm.class_name].where {_id: {$in: @[identifier]}}, options
         else
           return []
-
+    # if we get here, means method not found
+    console.warn "Method #{relation} does not exist for #{@constructor.to_s()}."
 
   isPersisted: -> @id?
 
@@ -186,6 +186,9 @@ class @Minimongoid
   @init: (attr, parent = null) ->
     new @(attr, parent)
 
+  @to_s: ->
+    if @_collection then @_collection._name else "embedded"
+
   @create: (attr) ->
     attr.createdAt = new Date().getTime()
     attr = @before_create(attr) if @before_create
@@ -198,9 +201,15 @@ class @Minimongoid
 
   # find + modelize
   @where: (selector = {}, options = {}) ->
-    @modelize @find(selector, options)
+    console.info " --- WHERE ---"
+    console.info "  #{_.singularize _.classify @to_s()}.where(#{JSON.stringify selector}#{if not _.isEmpty options then ','+JSON.stringify options else ''})"
+    result = @modelize @find(selector, options)
+    console.info "  > found #{result.length}" if result 
+    result 
 
   @first: (selector = {}, options = {}) ->
+    console.info " --- FIRST ---"
+    console.info "  #{_.singularize _.classify @to_s()}.first(#{JSON.stringify selector}#{if not _.isEmpty options then ','+JSON.stringify options else ''})"
     if doc = @_collection.findOne(selector)
       @init doc
 
@@ -231,6 +240,7 @@ class @Minimongoid
             selector._id['$in'] = _.map_object_id selector._id['$in']
         if selector and selector._ids 
           selector._ids = _.map(selector._ids, (id) -> new Meteor.Collection.ObjectID id)
+
       @_collection.find selector, options
 
 
@@ -246,3 +256,9 @@ class @Minimongoid
     self = @
     cursor.map (i) -> self.init(i, parent)
 
+
+
+# for some reason underscore.inflection stopped working with Meteor 0.6.5. 
+# so for now we just use this simple singularize method instead of including the library
+_.singularize = (s) ->
+  s = s.replace /s$/, "" 

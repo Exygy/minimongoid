@@ -1,18 +1,20 @@
 {
-  "meteor": {
-    "git": "https://github.com/meteor/meteor.git",
-    "branch": "master",
-    "commit": "2e78d0d110443ac6fb9471e6be1c136f15f03fd2"
-  },
+  "meteor": {},
   "dependencies": {
     "basePackages": {
+      "underscore-string-latest": {},
       "minimongoid": {}
     },
     "packages": {
+      "underscore-string-latest": {
+        "git": "https://github.com/TimHeckel/meteor-underscore-string.git",
+        "tag": "v2.3.3",
+        "commit": "4a5d70eee48fbd90a6e6fc78747250d704a0b3bb"
+      },
       "minimongoid": {
         "git": "https://github.com/Exygy/minimongoid.git",
-        "tag": "v0.7.5",
-        "commit": "dabf3d520ec8139a1714483c8602f449ef845c40"
+        "tag": "v0.7.6",
+        "commit": "fb551186f3a2dc3606df9f48f4083e7fa1e1bfca"
       },
       "underscore-inflection": {
         "git": "https://github.com/pius/meteor-underscore-inflection.git",

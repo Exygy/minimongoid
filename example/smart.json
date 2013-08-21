@@ -1,9 +1,9 @@
 {
   "meteor": {
-    "git": "https://github.com/meteor/meteor.git",
-    "branch": "master"
+    "tag": "v0.6.5"
   },
   "packages": {
+    "underscore-string-latest": {},
     "minimongoid": {}
   }
 }

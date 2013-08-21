@@ -3,7 +3,9 @@
   "dependencies": {
     "basePackages": {
       "underscore-string-latest": {},
-      "minimongoid": {}
+      "minimongoid": {
+        "path": ".."
+      }
     },
     "packages": {
       "underscore-string-latest": {
@@ -12,9 +14,7 @@
         "commit": "4a5d70eee48fbd90a6e6fc78747250d704a0b3bb"
       },
       "minimongoid": {
-        "git": "https://github.com/Exygy/minimongoid.git",
-        "tag": "v0.7.7",
-        "commit": "483b2f215620d3b10fc96d2486cf7ac6881dd76f"
+        "path": ".."
       }
     }
   }

@@ -2,7 +2,7 @@
   "name": "minimongoid",
   "description": "Mongoid inspired model architecture",
   "author": "Dave Kaplan <dave@exygy.com>",
-  "version": "0.7.7",
+  "version": "0.7.8",
   "homepage": "https://github.com/Exygy/minimongoid",
   "git": "https://github.com/Exygy/minimongoid.git",
   "packages": {

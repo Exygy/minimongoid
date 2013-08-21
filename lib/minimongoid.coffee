@@ -165,6 +165,7 @@ class @Minimongoid
   @_object_id: false
   @_collection: undefined
   @_type: undefined
+  @_debug: false
 
   @defaults: []
 
@@ -201,20 +202,24 @@ class @Minimongoid
 
   # find + modelize
   @where: (selector = {}, options = {}) ->
-    console.info " --- WHERE ---"
-    console.info "  #{_.singularize _.classify @to_s()}.where(#{JSON.stringify selector}#{if not _.isEmpty options then ','+JSON.stringify options else ''})"
+    if @_debug
+      console.info " --- WHERE ---"
+      console.info "  #{_.singularize _.classify @to_s()}.where(#{JSON.stringify selector}#{if not _.isEmpty options then ','+JSON.stringify options else ''})"
     result = @modelize @find(selector, options)
-    console.info "  > found #{result.length}" if result 
+    console.info "  > found #{result.length}" if @_debug and result 
     result 
 
   @first: (selector = {}, options = {}) ->
-    console.info " --- FIRST ---"
-    console.info "  #{_.singularize _.classify @to_s()}.first(#{JSON.stringify selector}#{if not _.isEmpty options then ','+JSON.stringify options else ''})"
-    if doc = @_collection.findOne(selector)
+    if @_debug
+      console.info " --- FIRST ---"
+      console.info "  #{_.singularize _.classify @to_s()}.first(#{JSON.stringify selector}#{if not _.isEmpty options then ','+JSON.stringify options else ''})"
+    if doc = @_collection.findOne(selector, options)
       @init doc
 
+  # kind of a silly method, just does a findOne with reverse sort on createdAt
   @last: (selector = {}, options = {}) ->
-    if doc = @_collection.findOne(selector, sort: createdAt: -1)
+    options.sort = createdAt: -1
+    if doc = @_collection.findOne(selector, options)
       @init doc
 
   @all: (options) ->

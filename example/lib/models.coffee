@@ -27,6 +27,9 @@ class @Recipe extends Minimongoid
   # indicate which collection to use
   @_collection: new Meteor.Collection('recipes')
 
+  # turning on @_debug will just enable some console logging whenever you run a query on this model
+  # @_debug: true
+
   # model relations
   @belongs_to: [
     {name: 'user'}

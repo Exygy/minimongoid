@@ -13,18 +13,8 @@
       },
       "minimongoid": {
         "git": "https://github.com/Exygy/minimongoid.git",
-        "tag": "v0.7.6",
-        "commit": "fb551186f3a2dc3606df9f48f4083e7fa1e1bfca"
-      },
-      "underscore-inflection": {
-        "git": "https://github.com/pius/meteor-underscore-inflection.git",
-        "tag": "v1.0.0",
-        "commit": "fe5f71cf03f10ba1bf9483a85e8290c9db028ea2"
-      },
-      "underscore-string": {
-        "git": "https://github.com/possibilities/meteor-underscore-string.git",
-        "tag": "v2.2.0rc.1",
-        "commit": "dec21fac23310daf76dc19f246749e7beb48af03"
+        "tag": "v0.7.7",
+        "commit": "483b2f215620d3b10fc96d2486cf7ac6881dd76f"
       }
     }
   }

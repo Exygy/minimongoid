@@ -72,4 +72,4 @@ There are some stupid simple tests that you can run:
     mrt test-packages ./
 
 -----
-Created by Dave Kaplan, and originally derived from Mario Uher's [minimongoid](https://github.com/haihappen/minimongoid). 
+Created by Dave Kaplan of [exygy](http://exygy.com), and originally derived from Mario Uher's [minimongoid](https://github.com/haihappen/minimongoid). 

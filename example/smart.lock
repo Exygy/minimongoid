@@ -13,8 +13,8 @@
       },
       "minimongoid": {
         "git": "https://github.com/Exygy/minimongoid.git",
-        "tag": "v0.7.8",
-        "commit": "e90f794ffb1dfb60ca6d97c6803afd8986d62694"
+        "tag": "v0.8.0",
+        "commit": "4f62f61ad5a34688e2b547dc843d76de4a254f7d"
       }
     }
   }

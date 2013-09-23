@@ -3,6 +3,7 @@ global = @
 class @Minimongoid
   # --- instance vars
   id: undefined
+  errors: false
   # attr: {}
 
   # --- instance methods 
@@ -12,6 +13,7 @@ class @Minimongoid
         @id = attr._id._str
       else
         @id = attr._id
+    # set up errors var
 
     # initialize relation arrays to be an empty array, if they don't exist 
     for habtm in @constructor.has_and_belongs_to_many
@@ -40,6 +42,63 @@ class @Minimongoid
       @[attr] = val if typeof @[attr] is 'undefined'
 
 
+    self = @
+
+    # set up belongs_to methods, e.g. recipe.user()
+    for belongs_to in @constructor.belongs_to
+      relation = belongs_to.name
+      identifier = "#{relation}_id"
+      # set up default class name, e.g. "belongs_to: user" ==> 'User'
+      class_name = belongs_to.class_name || _.titleize(relation)
+
+      @[relation] = do(relation, identifier, class_name) ->
+        (options = {}) ->
+          # if we have a relation_id 
+          if global[class_name] and self[identifier]
+            return global[class_name].find self[identifier], options
+          else
+            return false
+
+
+    # set up has_many methods, e.g. user.recipes()
+    for has_many in @constructor.has_many
+      relation = has_many.name
+      selector = {}
+      unless foreign_key = has_many.foreign_key
+        # can't use @constructor.name in production because it's been minified to "n"
+        foreign_key = "#{_.singularize(@constructor.to_s().toLowerCase())}_id"
+      if @constructor._object_id
+        selector[foreign_key] = new Meteor.Collection.ObjectID @id
+      else
+        selector[foreign_key] = @id
+      # set up default class name, e.g. "has_many: users" ==> 'User'
+      class_name = has_many.class_name || _.titleize(_.singularize(relation))
+      @[relation] = do(relation, selector, class_name) ->
+        (options = {}) ->
+          # e.g. where {user_id: @id}
+          if global[class_name]
+            return global[class_name].where selector, options
+
+
+    # set up HABTM methods, e.g. user.friends()
+    for habtm in @constructor.has_and_belongs_to_many
+      relation = habtm.name
+      identifier = "#{_.singularize(relation)}_ids"
+      # set up default class name, e.g. "habtm: users" ==> 'User'
+      class_name = habtm.class_name || _.titleize(_.singularize(relation))
+      @[relation] = do(relation, identifier, class_name) ->
+        (options = {}) ->
+          if global[class_name] and self[identifier] and self[identifier].length
+            return global[class_name].where {_id: {$in: self[identifier]}}, options
+          else
+            return []
+
+
+
+
+  # /--------------------
+  # DEPRECATED: r() and related() methods 
+  # --------------------
 
   # alias to @related
   r: (relation) ->
@@ -90,41 +149,39 @@ class @Minimongoid
     # if we get here, means method not found
     console.warn "Method #{relation} does not exist for #{@constructor.to_s()}."
 
-  isPersisted: -> @id?
 
-  errors: (val) ->
-    if typeof val != 'undefined'
-      @constructor.errors = val
-    else
-      @constructor.errors
+  # isPersisted: -> @id?
+
+  # -------------------
+  # --------------------/
 
 
   error: (field, message) ->
-    @constructor.errors ||= []
+    @errors ||= []
     obj = {}
     obj[field] = message
-    @constructor.errors.push obj
+    @errors.push obj
 
   isValid: (attr = {}) -> 
     @validate()
-    not @errors()
+    not @errors
 
   # nothing by default
   validate: ->
-    # if blah then @errors.blah = 'bloo' else @errors = null
+    # if blah then @errors.blah = 'no, bad!' else @errors = false
     true
 
   save: (attr = {}) ->
     # reset errors before running isValid()
-    @errors(false)
+    @errors = false
 
     for k,v of attr
       @[k] = v
-    return false unless @isValid()
+    return @ if not @isValid()
 
     # attr['_type'] = @constructor._type if @constructor._type?
     
-    if @isPersisted()
+    if @id?
       @constructor._collection.update @id, { $set: attr }
     else
       @id = @constructor._collection.insert attr
@@ -132,7 +189,7 @@ class @Minimongoid
     if @constructor.after_save
       @constructor.after_save(@)
 
-    this
+    return @
 
   update: (attr) ->
     @save(attr)
@@ -157,7 +214,7 @@ class @Minimongoid
     @constructor._collection.update @id, {$unset: unset}
 
   destroy: ->
-    if @isPersisted()
+    if @id?
       @constructor._collection.remove @id
       @id = null
 
@@ -169,7 +226,6 @@ class @Minimongoid
 
   @defaults: []
 
-  @errors = false
   @belongs_to: []
   @has_many: []
   @has_and_belongs_to_many: []
@@ -191,7 +247,7 @@ class @Minimongoid
     if @_collection then @_collection._name else "embedded"
 
   @create: (attr) ->
-    attr.createdAt = new Date().getTime()
+    attr.createdAt ||= +(new Date)
     attr = @before_create(attr) if @before_create
     doc = @init(attr)
     doc = doc.save(attr)

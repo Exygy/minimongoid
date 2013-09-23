@@ -7,7 +7,7 @@ if (Meteor.isClient) {
   };
 
   Template.recipes.my_recipes = function () {
-    return User.current().r('recipes');
+    return User.current().recipes();
   };
   Template.recipes.events({
     'click #recipe-save' : function(e, t) {
@@ -16,9 +16,9 @@ if (Meteor.isClient) {
         user_id: Meteor.userId(),
         name:    $(t.find('#recipe-name')).val()
       });
-      if (Recipe.errors) {
+      if (recipe.errors) {
         $(t.find('#recipe-form')).addClass('error');
-        $(t.find('#recipe-form .help-inline')).html(Recipe.error_message());
+        $(t.find('#recipe-form .help-inline')).html(recipe.error_message());
       }
     }
   });
@@ -42,7 +42,7 @@ if (Meteor.isClient) {
 
 
   Template.friends_recipes.recipes = function () {
-    var recipes = _.reduceRight(User.current().r('friends'), function(a, b) { return a.concat(b.r('recipes')); }, []);
+    var recipes = _.reduceRight(User.current().friends(), function(a, b) { return a.concat(b.recipes()); }, []);
     return recipes;
   };
 
@@ -93,9 +93,11 @@ if (Meteor.isServer) {
     return User.find({}, {
       fields: {
         username: 1,
-        friend_ids: 1
+        friend_ids: 1,
+        createdAt: 1
       }
     });
+    return User.find()
   });
   Meteor.publish('recipes', function() {
     return Recipe.find();

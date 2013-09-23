@@ -53,17 +53,17 @@ class @Recipe extends Minimongoid
   @zesty: ->
     @where({'ingredients.name': /^zesty/i})
 
-  @error_message: ->
-    msg = ''
-    for i in @errors
-      for key,value of i
-        msg += "<strong>#{key}:</strong> #{value}"
-    msg
 
   # Add some validation parameters. As long as the @error() method is triggered, then validation will fail
   validate: ->
     unless @name and @name.length > 3
       @error('name', 'Recipe name is required and should be longer than 3 letters.')
+  error_message: ->
+    msg = ''
+    for i in @errors
+      for key,value of i
+        msg += "<strong>#{key}:</strong> #{value}"
+    msg
 
   # instance methods
   spicy: ->

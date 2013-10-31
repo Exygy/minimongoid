@@ -47,7 +47,7 @@ class @Minimongoid
     # set up belongs_to methods, e.g. recipe.user()
     for belongs_to in @constructor.belongs_to
       relation = belongs_to.name
-      identifier = "#{relation}_id"
+      identifier = belongs_to.identifier || "#{relation}_id"
       # set up default class name, e.g. "belongs_to: user" ==> 'User'
       class_name = belongs_to.class_name || _.titleize(relation)
 

@@ -31,10 +31,11 @@ class @Minimongoid
       continue if name.match(/^_id/)
       if name.match(/_id$/) and (value instanceof Meteor.Collection.ObjectID)
         @[name] = value._str
-      else if _.findWhere(@constructor.embeds_many, {name: name})
+      else if (embeds_many = _.findWhere(@constructor.embeds_many, {name: name}))
         # initialize a model with the appropriate attributes 
         # also pass "self" along as the parent model
-        @[name] = global[_.classify(_.singularize(name))].modelize(value, @)
+        class_name = embeds_many.class_name || _.classify(_.singularize(name))
+        @[name] = global[class_name].modelize(value, @)
       else
         @[name] = value
 

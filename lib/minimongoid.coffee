@@ -13,6 +13,7 @@ class @Minimongoid
         @id = attr._id._str
       else
         @id = attr._id
+      @_id = @id
     # set up errors var
 
     # initialize relation arrays to be an empty array, if they don't exist 
@@ -27,6 +28,8 @@ class @Minimongoid
     if @constructor.embedded_in and parent
       @[@constructor.embedded_in] = parent
 
+
+    # load in all the passed attrs 
     for name, value of attr
       continue if name.match(/^_id/)
       if name.match(/_id$/) and (value instanceof Meteor.Collection.ObjectID)
@@ -38,6 +41,7 @@ class @Minimongoid
       else
         @[name] = value
 
+    # load in defaults
     for attr, val of @constructor.defaults
       @[attr] = val if typeof @[attr] is 'undefined'
 
@@ -74,10 +78,12 @@ class @Minimongoid
       # set up default class name, e.g. "has_many: users" ==> 'User'
       class_name = has_many.class_name || _.titleize(_.singularize(relation))
       @[relation] = do(relation, selector, class_name) ->
-        (options = {}) ->
+        (mod_selector = {}, options = {}) ->
+          # first consider any passed in selector options
+          mod_selector = _.extend mod_selector, selector
           # e.g. where {user_id: @id}
           if global[class_name]
-            return global[class_name].where selector, options
+            return global[class_name].where mod_selector, options
 
 
     # set up HABTM methods, e.g. user.friends()
@@ -87,12 +93,14 @@ class @Minimongoid
       # set up default class name, e.g. "habtm: users" ==> 'User'
       class_name = habtm.class_name || _.titleize(_.singularize(relation))
       @[relation] = do(relation, identifier, class_name) ->
-        (options = {}) ->
+        (mod_selector = {}, options = {}) ->
+          selector =  {_id: {$in: self[identifier]}}
+          # first consider any passed in selector options
+          mod_selector = _.extend mod_selector, selector
           if global[class_name] and self[identifier] and self[identifier].length
-            return global[class_name].where {_id: {$in: self[identifier]}}, options
+            return global[class_name].where mod_selector, options
           else
             return []
-
 
 
 
@@ -184,7 +192,7 @@ class @Minimongoid
     if @id?
       @constructor._collection.update @id, { $set: attr }
     else
-      @id = @constructor._collection.insert attr
+      @id = @_id = @constructor._collection.insert attr
     
     if @constructor.after_save
       @constructor.after_save(@)
@@ -195,11 +203,11 @@ class @Minimongoid
     @save(attr)
 
   # push to mongo array field
-  push: (data) ->
+  push: (data) -> 
+    # TODO: should maybe do something like this; but it should know if we're pushing an embedded model and instantiate it...
     # for name, value of data 
     #   # update locally 
     #   @[name].push value
-    # and push to DB    
 
     # addToSet to ensure uniqueness -- can't think of if/when we WOULDN'T want that??
     @constructor._collection.update @id, {$addToSet: data}
@@ -216,7 +224,11 @@ class @Minimongoid
   destroy: ->
     if @id?
       @constructor._collection.remove @id
-      @id = null
+      @id = @_id = null
+
+  reload: ->
+    if @id?
+      @constructor.find(@id)
 
   # --- class variables
   @_object_id: false
@@ -247,7 +259,7 @@ class @Minimongoid
     if @_collection then @_collection._name else "embedded"
 
   @create: (attr) ->
-    attr.createdAt ||= +(new Date)
+    attr.createdAt ||= new Date()
     attr = @before_create(attr) if @before_create
     doc = @init(attr)
     doc = doc.save(attr)

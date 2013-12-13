@@ -263,7 +263,7 @@ class @Minimongoid
     attr.createdAt ||= new Date()
     attr = @before_create(attr) if @before_create
     doc = @init(attr)
-    doc = doc.save(attr)
+    doc = doc.save()
     if doc and @after_create
       @after_create(doc)
     else

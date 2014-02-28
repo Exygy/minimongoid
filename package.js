@@ -5,7 +5,12 @@ Package.describe({
 Package.on_use(function (api) {
   var both = ['client', 'server'];
   api.use(['underscore', 'underscore-string-latest', 'coffeescript'], both);
-  api.add_files(['lib/relation.coffee', 'lib/minimongoid.coffee'], both);
+  files = [
+    'lib/relation.coffee',
+    'lib/has_many_relation.coffee',
+    'lib/minimongoid.coffee'
+  ];
+  api.add_files(files, both);
 });
 
 Package.on_test(function (api) {

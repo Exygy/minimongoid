@@ -1,18 +1,22 @@
 class @Relation extends Array
   constructor: (klass, args...) ->
     @klass = klass
+    @elems = args
+    @selector = {}
     @push.apply(@, args)
 
   @new: (klass, args...) ->
     new @(klass, args...)
 
-  setLink: (foreign_key, id) ->
-    @link = {}
-    @link[foreign_key] = id
+  toArray: () ->
+    @elems
 
-  link: () ->
-    @link
+  relationClass: ->
+    @klass
+
+  setQuery: (selector = {}) ->
+    @selector = selector
 
   create: (attr) ->
-    attr = _.extend(attr, @link) if @link
-    @klass.create(attr)
+    @selector ||= {}
+    @klass.create(_.extend(@selector, attr))

@@ -17,6 +17,9 @@ class @Minimongoid
     # set up errors var
 
     # initialize relation arrays to be an empty array, if they don't exist 
+    @initializeRelations(attr, parent) if @id
+
+  initializeRelations: (attr = {}, parent = null) ->
     for habtm in @constructor.has_and_belongs_to_many
       # e.g. matchup.game_ids = []
       identifier = "#{_.singularize(habtm.name)}_ids"
@@ -84,9 +87,7 @@ class @Minimongoid
           mod_selector = _.extend mod_selector, selector
           # e.g. where {user_id: @id}
           if global[class_name]
-            relation = global[class_name].where mod_selector, options
-            relation.setLink(foreign_key, @id)
-            return relation
+            HasManyRelation.fromRelation(global[class_name].where(mod_selector, options), foreign_key, @id)
 
 
     # set up HABTM methods, e.g. user.friends()
@@ -266,6 +267,7 @@ class @Minimongoid
     attr = @before_create(attr) if @before_create
     doc = @init(attr)
     doc = doc.save(attr)
+    doc.initializeRelations(attr)
     if doc and @after_create
       @after_create(doc)
     else
@@ -277,7 +279,8 @@ class @Minimongoid
       console.info " --- WHERE ---"
       console.info "  #{_.singularize _.classify @to_s()}.where(#{JSON.stringify selector}#{if not _.isEmpty options then ','+JSON.stringify options else ''})"
     result = @modelize @find(selector, options)
-    console.info "  > found #{result.length}" if @_debug and result 
+    result.setQuery selector
+    console.info "  > found #{result.length}" if @_debug and result
     result
 
   @first: (selector = {}, options = {}) ->

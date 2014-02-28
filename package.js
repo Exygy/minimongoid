@@ -8,6 +8,7 @@ Package.on_use(function (api) {
   files = [
     'lib/relation.coffee',
     'lib/has_many_relation.coffee',
+    'lib/has_and_belongs_to_many_relation.coffee',
     'lib/minimongoid.coffee'
   ];
   api.add_files(files, both);

@@ -101,10 +101,16 @@ class @Minimongoid
           selector =  {_id: {$in: self[identifier]}}
           # first consider any passed in selector options
           mod_selector = _.extend mod_selector, selector
+          instance = global[class_name].init()
+          filter = (r) ->
+            global[r.class_name] == this.constructor
+          inverse = _.find instance.constructor.has_and_belongs_to_many, filter, @
+          inverse_identifier = "#{_.singularize(inverse.name)}_ids"
           if global[class_name] and self[identifier] and self[identifier].length
-            return global[class_name].where mod_selector, options
+            relation = global[class_name].where mod_selector, options
+            return HasAndBelongsToManyRelation.fromRelation(relation, @, inverse_identifier, identifier, @id)
           else
-            return []
+            return HasAndBelongsToManyRelation.new(@, global[class_name], inverse_identifier, identifier, @id)
 
 
 

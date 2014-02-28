@@ -1,12 +1,9 @@
 class @HasManyRelation extends @Relation
   constructor: (klass, foreign_key, id, args...) ->
-    @klass = klass
     @link = {}
     @link[foreign_key] = id
-    @klass = klass
     @foreign_key = foreign_key
-    @id = id
-    @push.apply(@, args)
+    super klass, args...
 
   @new: (klass, foreign_key, id, args...) ->
     new @(klass, foreign_key, id, args...)

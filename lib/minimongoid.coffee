@@ -276,7 +276,7 @@ class @Minimongoid
       console.info "  #{_.singularize _.classify @to_s()}.where(#{JSON.stringify selector}#{if not _.isEmpty options then ','+JSON.stringify options else ''})"
     result = @modelize @find(selector, options)
     console.info "  > found #{result.length}" if @_debug and result 
-    result 
+    result
 
   @first: (selector = {}, options = {}) ->
     if @_debug
@@ -328,11 +328,11 @@ class @Minimongoid
   # run a model init on all items in the collection 
   @modelize: (cursor, parent = null) ->
     self = @
-    cursor.map (i) -> self.init(i, parent)
-
+    models = cursor.map (i) -> self.init(i, parent)
+    Relation.new self, models...
 
 
 # for some reason underscore.inflection stopped working with Meteor 0.6.5. 
 # so for now we just use this simple singularize method instead of including the library
 _.singularize = (s) ->
-  s = s.replace /s$/, "" 
+  s = s.replace /s$/, ""

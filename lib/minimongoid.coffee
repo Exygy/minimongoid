@@ -84,7 +84,9 @@ class @Minimongoid
           mod_selector = _.extend mod_selector, selector
           # e.g. where {user_id: @id}
           if global[class_name]
-            return global[class_name].where mod_selector, options
+            relation = global[class_name].where mod_selector, options
+            relation.setLink(foreign_key, @id)
+            return relation
 
 
     # set up HABTM methods, e.g. user.friends()

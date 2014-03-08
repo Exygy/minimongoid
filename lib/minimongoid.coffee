@@ -103,7 +103,8 @@ class @Minimongoid
           mod_selector = _.extend mod_selector, selector
           instance = global[class_name].init()
           filter = (r) ->
-            global[r.class_name] == this.constructor
+            name = r.class_name || _.titleize(_.singularize(r.name))
+            global[name] == this.constructor
           inverse = _.find instance.constructor.has_and_belongs_to_many, filter, @
           inverse_identifier = "#{_.singularize(inverse.name)}_ids"
           if global[class_name] and self[identifier] and self[identifier].length

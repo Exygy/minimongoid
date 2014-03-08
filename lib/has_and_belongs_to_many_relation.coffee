@@ -15,7 +15,10 @@ class @HasAndBelongsToManyRelation extends @Relation
   create: (attr) ->
     obj = super _.extend(attr, @link)
     attr = {}
-    attr[@inverse_identifier] = obj.id
-    @instance.push(attr)
+    if @instance[@inverse_identifier].length == 0
+      attr[@inverse_identifier] = [obj.id]
+      @instance.update attr
+    else
+      @instance.push(attr)
     obj
     

@@ -17,6 +17,9 @@ class @Minimongoid
     # set up errors var
 
     # initialize relation arrays to be an empty array, if they don't exist 
+    @initializeRelations(attr, parent) if @id
+
+  initializeRelations: (attr = {}, parent = null) ->
     for habtm in @constructor.has_and_belongs_to_many
       # e.g. matchup.game_ids = []
       identifier = "#{_.singularize(habtm.name)}_ids"
@@ -84,7 +87,7 @@ class @Minimongoid
           mod_selector = _.extend mod_selector, selector
           # e.g. where {user_id: @id}
           if global[class_name]
-            return global[class_name].where mod_selector, options
+            HasManyRelation.fromRelation(global[class_name].where(mod_selector, options), foreign_key, @id)
 
 
     # set up HABTM methods, e.g. user.friends()
@@ -98,10 +101,17 @@ class @Minimongoid
           selector =  {_id: {$in: self[identifier]}}
           # first consider any passed in selector options
           mod_selector = _.extend mod_selector, selector
+          instance = global[class_name].init()
+          filter = (r) ->
+            name = r.class_name || _.titleize(_.singularize(r.name))
+            global[name] == this.constructor
+          inverse = _.find instance.constructor.has_and_belongs_to_many, filter, @
+          inverse_identifier = "#{_.singularize(inverse.name)}_ids"
           if global[class_name] and self[identifier] and self[identifier].length
-            return global[class_name].where mod_selector, options
+            relation = global[class_name].where mod_selector, options
+            return HasAndBelongsToManyRelation.fromRelation(relation, @, inverse_identifier, identifier, @id)
           else
-            return []
+            return HasAndBelongsToManyRelation.new(@, global[class_name], inverse_identifier, identifier, @id)
 
 
 
@@ -264,6 +274,7 @@ class @Minimongoid
     attr = @before_create(attr) if @before_create
     doc = @init(attr)
     doc = doc.save(attr)
+    doc.initializeRelations(attr)
     if doc and @after_create
       @after_create(doc)
     else
@@ -275,8 +286,9 @@ class @Minimongoid
       console.info " --- WHERE ---"
       console.info "  #{_.singularize _.classify @to_s()}.where(#{JSON.stringify selector}#{if not _.isEmpty options then ','+JSON.stringify options else ''})"
     result = @modelize @find(selector, options)
-    console.info "  > found #{result.length}" if @_debug and result 
-    result 
+    result.setQuery selector
+    console.info "  > found #{result.length}" if @_debug and result
+    result
 
   @first: (selector = {}, options = {}) ->
     if @_debug
@@ -328,11 +340,11 @@ class @Minimongoid
   # run a model init on all items in the collection 
   @modelize: (cursor, parent = null) ->
     self = @
-    cursor.map (i) -> self.init(i, parent)
-
+    models = cursor.map (i) -> self.init(i, parent)
+    Relation.new self, models...
 
 
 # for some reason underscore.inflection stopped working with Meteor 0.6.5. 
 # so for now we just use this simple singularize method instead of including the library
 _.singularize = (s) ->
-  s = s.replace /s$/, "" 
+  s = s.replace /s$/, ""

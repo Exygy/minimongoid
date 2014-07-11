@@ -196,6 +196,12 @@ class @Minimongoid
 
     for k,v of attr
       @[k] = v
+
+    if @constructor.before_save
+      for k,v of @constructor.before_save(@)
+        attr[k] = v
+        @[k] = v
+
     return @ if not @isValid()
 
     # attr['_type'] = @constructor._type if @constructor._type?

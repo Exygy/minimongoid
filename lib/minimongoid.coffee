@@ -197,10 +197,7 @@ class @Minimongoid
     for k,v of attr
       @[k] = v
 
-    if @constructor.before_save
-      for k,v of @constructor.before_save(@)
-        attr[k] = v
-        @[k] = v
+    attr = @constructor.before_save(attr) if @constructor.before_save
 
     return @ if not @isValid()
 

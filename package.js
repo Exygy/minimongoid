@@ -1,6 +1,6 @@
 Package.describe({
   summary: "Mongoid inspired model architecture",
-  version: "0.9.1",
+  version: "0.9.2",
   git: "https://github.com/Exygy/minimongoid.git"
 });
 

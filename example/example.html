@@ -11,7 +11,7 @@
 
 <!-- Main template --> 
 <template name="main">
-  {{#if currentUserId}}
+  {{#if currentUser}}
     <ul class="nav nav-tabs" id="tabs">
       <li class="active">
         <a href="#recipes" data-toggle="tab">My Recipes</a>
@@ -23,7 +23,7 @@
         <a href="#friends_recipes" data-toggle="tab">My Friends' Recipes</a>
       </li>
       <li style="float:right; margin-right: 100px;">
-        {{loginButtons}}
+        {{> loginButtons}}
       </li>
     </ul>
     
@@ -39,7 +39,7 @@
         </div>
     </div>
   {{else}}
-    {{loginButtons}}
+    {{> loginButtons}}
   {{/if}}
 </template>
 
@@ -95,7 +95,7 @@
     <h2>
       {{name}} 
       {{#if myRecipe}}
-        <a class="del" href="#">&times;</a>
+        <a class="delete-recipe" href="#">&times;</a>
       {{else}}
         <span style="font-size:14px;">according to <em style="color:#188181">{{creator_name}}</em></span>
       {{/if}}
@@ -128,7 +128,7 @@
     {{nice_quantity}} of {{name}} 
 
     {{#if myRecipe}}
-      &nbsp; <a class="del" href="#">&times;</a>
+      &nbsp; <a class="delete-ingredient" href="#">&times;</a>
     {{/if}}
   </li>
 </template>

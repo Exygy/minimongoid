@@ -42,7 +42,7 @@ if (Meteor.isClient) {
 
 
   Template.friends_recipes.recipes = function () {
-    var recipes = _.reduceRight(User.current().friends(), function(a, b) { return a.concat(b.recipes()); }, []);
+    var recipes = _.reduceRight(User.current().friends(), function(a, b) { return a.concat(b.recipes().toArray()); }, []);
     return recipes;
   };
 
@@ -58,7 +58,7 @@ if (Meteor.isClient) {
         ingredients: ingredient
       });
     },
-    'click .del' : function(e, t) {
+    'click .delete-recipe' : function(e, t) {
       e.preventDefault();
       var recipe = this;
       $(t.firstNode).fadeOut(function() {
@@ -68,7 +68,7 @@ if (Meteor.isClient) {
   });
 
   Template.ingredient.events({
-    'click .del' : function(e, t) {
+    'click .delete-ingredient' : function(e, t) {
       e.preventDefault();
       this.recipe.pull({
         ingredients: {name: this.name}

@@ -87,6 +87,6 @@ class @Ingredient extends Minimongoid
     if @quantity == 1 then "#{@quantity} dash" else "#{@quantity} dashes"
 
   myRecipe: ->
-    @recipe.myRecipe()
+    if @recipe then @recipe.myRecipe() else false
 
 

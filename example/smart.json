@@ -1,9 +1,0 @@
-{
-  "meteor": {
-    "tag": "v0.6.5.1"
-  },
-  "packages": {
-    "underscore-string-latest": {},
-    "minimongoid": {}
-  }
-}

@@ -14,12 +14,12 @@ class @Minimongoid
       else
         @id = attr._id
       @_id = @id
-    # set up errors var
+    @initAttrsAndRelations(attr, parent)
 
+  # this function sets up all of the attributes to be stored on the model as well as
+  # setting up the relation methods 
+  initAttrsAndRelations: (attr = {}, parent = null) ->
     # initialize relation arrays to be an empty array, if they don't exist 
-    @initializeRelations(attr, parent) if @id
-
-  initializeRelations: (attr = {}, parent = null) ->
     for habtm in @constructor.has_and_belongs_to_many
       # e.g. matchup.game_ids = []
       identifier = "#{_.singularize(habtm.name)}_ids"
@@ -274,7 +274,7 @@ class @Minimongoid
     attr = @before_create(attr) if @before_create
     doc = @init(attr)
     doc = doc.save(attr)
-    doc.initializeRelations(attr)
+    doc.initAttrsAndRelations(attr)
     if doc and @after_create
       @after_create(doc)
     else

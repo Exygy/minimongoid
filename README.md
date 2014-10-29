@@ -66,9 +66,8 @@ Once you set up a relation that is *not* an embedded one (e.g. `belongs_to`, `ha
 # Testing
 There are some stupid simple tests that you can run:
 
-    mrt test-packages ./
+    meteor test-packages ./  
 
-UPDATE: as of Meteor 0.6.5, these tests no longer seem to run (it says 0 of 0 passed). Haven't looked into it yet. 
-
+Then open your browser and go to localhost:3000
 -----
 Created by Dave Kaplan of [Exygy](http://exygy.com), and originally derived from Mario Uher's [minimongoid](https://github.com/haihappen/minimongoid). 

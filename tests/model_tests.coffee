@@ -12,9 +12,8 @@ Tinytest.add "can have embedded models", (test) ->
 
 Tinytest.add "can have model validation", (test) ->
   r = Recipe.create {name: ''}
-  test.equal r, false
-  test.equal Recipe.errors.length, 1
+  test.equal r.errors.length, 1
 
   r = Recipe.create {name: 'named'}
   test.equal 1, Recipe.count {name: 'named'}
-  test.equal Recipe.errors, false
+  test.equal r.errors.length > 0, false

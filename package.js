@@ -19,7 +19,7 @@ Package.on_use(function (api) {
 
 Package.on_test(function (api) {
   var both = ['client', 'server'];
-  api.use(["kaptron:minimongoid", 'tinytest'], both);
+  api.use(["kaptron:minimongoid", 'tinytest', 'coffeescript'], both);
   api.add_files('tests/models.coffee', both);
   api.add_files('tests/server_tests.coffee', ['server']);
   api.add_files('tests/model_tests.coffee', both);

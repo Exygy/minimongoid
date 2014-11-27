@@ -4,8 +4,6 @@
 # but you can also edit it by hand.
 
 meteor-platform
-autopublish
-insecure
 bootstrap
 mrt:underscore-string-latest
 coffeescript

@@ -288,7 +288,8 @@ class @Minimongoid
     if @_debug
       console.info " --- WHERE ---"
       console.info "  #{_.singularize _.classify @to_s()}.where(#{JSON.stringify selector}#{if not _.isEmpty options then ','+JSON.stringify options else ''})"
-    result = @modelize @find(selector, options)
+    result = @find(selector, options).fetch()
+    result = Relation.new self, result...
     result.setQuery selector
     console.info "  > found #{result.length}" if @_debug and result
     result
@@ -306,11 +307,16 @@ class @Minimongoid
     if doc = @_collection.findOne(selector, options)
       @init doc
 
-  @all: (options) ->
+  @all: (options = {}) ->
     @where({}, options)
 
   # this doesn't perform a fetch, just generates a collection cursor
   @find: (selector = {}, options = {}) ->
+    self = @
+    # ***Important!*** Transform all docs in the collection to be an instance of our model
+    unless options.transform
+      options.transform = (doc) -> self.init(doc)
+
     # unless you just pass an id, in which case it *does* fetch the first
     unless typeof selector == 'object'
       if @_object_id
@@ -341,6 +347,7 @@ class @Minimongoid
 
 
   # run a model init on all items in the collection 
+  # -- somewhat deprecated -- used to be used in @where function, which is replaced by the transform inside of @find
   @modelize: (cursor, parent = null) ->
     self = @
     models = cursor.map (i) -> self.init(i, parent)

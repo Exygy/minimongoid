@@ -285,6 +285,7 @@ class @Minimongoid
 
   # find + modelize
   @where: (selector = {}, options = {}) ->
+    self = @
     if @_debug
       console.info " --- WHERE ---"
       console.info "  #{_.singularize _.classify @to_s()}.where(#{JSON.stringify selector}#{if not _.isEmpty options then ','+JSON.stringify options else ''})"

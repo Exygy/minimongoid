@@ -7,7 +7,7 @@ Package.describe({
 Package.on_use(function (api) {
   api.versionsFrom("METEOR@0.9.0");
   var both = ['client', 'server'];
-  api.use(['underscore', "mrt:underscore-string-latest@2.3.3", 'coffeescript'], both);
+  api.use(['underscore', "underscorestring:underscore.string", 'coffeescript'], both);
   files = [
     'lib/relation.coffee',
     'lib/has_many_relation.coffee',

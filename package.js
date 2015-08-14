@@ -1,8 +1,8 @@
 Package.describe({
-  name: "benmgreene:minimongoid",
+  name: "kaptron:minimongoid",
   summary: "Mongoid inspired model architecture",
-  version: "0.9.5",
-  git: "https://github.com/benmgreene/minimongoid.git"
+  version: "0.9.6",
+  git: "https://github.com/Exygy/minimongoid.git"
 });
 
 Package.on_use(function (api) {
@@ -20,7 +20,7 @@ Package.on_use(function (api) {
 
 Package.on_test(function (api) {
   var both = ['client', 'server'];
-  api.use(["benmgreene:minimongoid", 'tinytest', 'coffeescript'], both);
+  api.use(["kaptron:minimongoid", 'tinytest', 'coffeescript'], both);
   api.add_files('tests/models.coffee', both);
   api.add_files('tests/server_tests.coffee', ['server']);
   api.add_files('tests/model_tests.coffee', both);

@@ -7,7 +7,8 @@ class @Minimongoid
   # attr: {}
 
   # --- instance methods 
-  constructor: (attr = {}, parent = null) ->
+  constructor: (attr = {}, parent = null, is_new = true) ->
+    @__is_new = !!is_new
     if attr._id
       if @constructor._object_id
         @id = attr._id._str
@@ -190,7 +191,10 @@ class @Minimongoid
     # if blah then @errors.blah = 'no, bad!' else @errors = false
     true
 
-  save: (attr = {}) ->
+  is_new: () -> @isNew()
+  isNew: () -> @__is_new
+
+  save: (attr = {}, callback = undefined) ->
     # reset errors before running isValid()
     @errors = false
 
@@ -203,18 +207,43 @@ class @Minimongoid
 
     # attr['_type'] = @constructor._type if @constructor._type?
     
-    if @id?
-      @constructor._collection.update @id, { $set: attr }
+    if callback?
+      if @isNew()
+        @constructor._collection.insert( attr, ((error, result) =>
+          unless error?
+            @id = @_id = result
+            @__is_new = false
+
+            if @constructor.after_save
+              @constructor.after_save(@)
+
+          callback(error, result)
+        ))
+      else
+        @constructor._collection.update( @id, { $set: attr }, ((error, result) =>
+          unless error?
+            if @constructor.after_save
+              @constructor.after_save(@)
+
+          callback(error, result)
+        ))
+
+      return null
+
     else
-      @id = @_id = @constructor._collection.insert attr
-    
-    if @constructor.after_save
-      @constructor.after_save(@)
+      if @isNew()
+        @id = @_id = @constructor._collection.insert( attr )
+        @__is_new = false
+      else
+        @constructor._collection.update( @id, { $set: attr } )
+      
+      if @constructor.after_save
+        @constructor.after_save(@)
 
-    return @
+      return @
 
-  update: (attr) ->
-    @save(attr)
+  update: (attr, callback = undefined) ->
+    @save(attr, callback)
 
   # push to mongo array field
   push: (data) -> 
@@ -235,9 +264,9 @@ class @Minimongoid
     unset[field] = ""
     @constructor._collection.update @id, {$unset: unset}
 
-  destroy: ->
+  destroy: (callback = undefined) ->
     if @id?
-      @constructor._collection.remove @id
+      @constructor._collection.remove( @id, callback )
       @id = @_id = null
 
   reload: ->
@@ -266,22 +295,27 @@ class @Minimongoid
 
 
   # --- class methods
-  @init: (attr, parent = null) ->
-    new @(attr, parent)
+  @init: (attr, parent = null, is_new = false) ->
+    new @(attr, parent, is_new)
 
   @to_s: ->
     if @_collection then @_collection._name else "embedded"
 
-  @create: (attr) ->
+  @create: (attr, callback = undefined) ->
     attr.createdAt ||= new Date()
     attr = @before_create(attr) if @before_create
-    doc = @init(attr)
-    doc = doc.save(attr)
-    doc.initAttrsAndRelations(attr)
-    if doc and @after_create
-      @after_create(doc)
+    doc = @init(attr, null, true)
+
+    if callback?
+      doc.save(attr, callback)
+      null
     else
-      doc
+      doc = doc.save(attr)
+      doc.initAttrsAndRelations(attr)
+      if doc and @after_create
+        @after_create(doc)
+      else
+        doc
 
   # find + modelize
   @where: (selector = {}, options = {}) ->

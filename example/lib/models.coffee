@@ -11,8 +11,11 @@ class @User extends Minimongoid
   @has_and_belongs_to_many: [
     {name: 'friends', class_name: 'User'}
   ]
+  @has_one: [
+    {name: 'profile', foreign_key: 'user_id'}
+  ]
 
-  # instance methods 
+  # instance methods
   # return true if user is friends with User where id==user_id
   friendsWith: (user_id) ->
     _.contains @friend_ids, user_id
@@ -43,7 +46,7 @@ class @Recipe extends Minimongoid
     name: ''
     cooking_time: '30 mins'
 
-  # titleize the name before creation   
+  # titleize the name before creation
   @before_create: (attr) ->
     attr.name = _.titleize(attr.name)
     attr
@@ -90,3 +93,14 @@ class @Ingredient extends Minimongoid
     if @recipe then @recipe.myRecipe() else false
 
 
+class @Profile extends Minimongoid
+  # indicate which collection to use
+  @_collection: new Meteor.Collection('profiles')
+
+  @defaults:
+    description: "The user hasn't provided a description yet."
+
+  # model relations
+  @belongs_to: [
+    {name: 'user'}
+  ]

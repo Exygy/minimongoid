@@ -9,6 +9,9 @@ class @Recipe extends Minimongoid
   @embeds_many: [
     {name: 'ingredients'}
   ]
+  @has_one: [
+    {name: 'instruction'}
+  ]
   validate: ->
     unless @name and @name.length > 2
       @error 'name', 'Must have a name of at least 2 characters.'
@@ -18,3 +21,9 @@ class @Ingredient extends Minimongoid
   # lets give it an instance method
   spicy_name: ->
     "spicy #{@name}"
+
+class @Instruction extends Minimongoid
+  @_collection: new Meteor.Collection('instructions')
+  @belongs_to: [
+    {name: 'recipe'}
+  ]

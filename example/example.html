@@ -9,7 +9,7 @@
 </body>
 
 
-<!-- Main template --> 
+<!-- Main template -->
 <template name="main">
   {{#if currentUser}}
     <ul class="nav nav-tabs" id="tabs">
@@ -22,11 +22,14 @@
       <li>
         <a href="#friends_recipes" data-toggle="tab">My Friends' Recipes</a>
       </li>
+      <li>
+        <a href="#profile" data-toggle="tab">My Profile</a>
+      </li>
       <li style="float:right; margin-right: 100px;">
         {{> loginButtons}}
       </li>
     </ul>
-    
+
     <div class="tab-content">
         <div id="recipes" class="active tab-pane">
           {{> recipes}}
@@ -36,6 +39,9 @@
         </div>
         <div id="friends_recipes" class="tab-pane">
           {{> friends_recipes}}
+        </div>
+        <div id="profile" class="tab-pane">
+          {{> profile}}
         </div>
     </div>
   {{else}}
@@ -93,7 +99,7 @@
 <template name="recipe">
   <div class="well">
     <h2>
-      {{name}} 
+      {{name}}
       {{#if myRecipe}}
         <a class="delete-recipe" href="#">&times;</a>
       {{else}}
@@ -125,10 +131,36 @@
 <!-- Ingredient -->
 <template name="ingredient">
   <li>
-    {{nice_quantity}} of {{name}} 
+    {{nice_quantity}} of {{name}}
 
     {{#if myRecipe}}
       &nbsp; <a class="delete-ingredient" href="#">&times;</a>
     {{/if}}
   </li>
+</template>
+
+
+<!-- Profile -->
+<template name="profile">
+  {{#if my_profile}}
+    {{#with my_profile}}
+      <h2>About {{name}}</h2>
+      <p>{{description}}</p>
+    {{/with}}
+  {{else}}
+    <div>
+      <strong>Create your profile!</strong>
+      <div class="control-group" id="profile-form">
+        <label class="control-label" for="profile-name">Your name</label>
+        <input id="profile-name" type="text" />
+        <label class="control-label" for="profile-description">
+          Something about yourself
+        </label>
+        <textarea id="profile-description"></textarea>
+        <div class="controls">
+          <input id="profile-save" type="submit" />
+        </div>
+      </div>
+    </div>
+  {{/if}}
 </template>

@@ -47,7 +47,7 @@ class @Minimongoid
         @[name] = value
 
     # load in defaults
-    for attr, val of @constructor.defaults
+    for own attr, val of @constructor.defaults
       @[attr] = val if typeof @[attr] is 'undefined'
 
 

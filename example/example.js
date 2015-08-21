@@ -1,6 +1,7 @@
 if (Meteor.isClient) {
   Meteor.subscribe('userData');
   Meteor.subscribe('recipes');
+  Meteor.subscribe('profiles');
 
   Template.main.currentUserId = function () {
     return Meteor.userId();
@@ -77,6 +78,21 @@ if (Meteor.isClient) {
   });
 
 
+  Template.profile.helpers({
+    my_profile: function () {
+      return User.current().profile();
+    }
+  });
+  Template.profile.events({
+    'click #profile-save' : function(e, t) {
+      e.preventDefault();
+      Profile.create({
+        user_id:     Meteor.userId(),
+        name:        $(t.find('#profile-name')).val(),
+        description: $(t.find('#profile-description')).val()
+      });
+    }
+  });
 }
 
 if (Meteor.isServer) {
@@ -102,6 +118,9 @@ if (Meteor.isServer) {
   Meteor.publish('recipes', function() {
     return Recipe.find();
   });
+  Meteor.publish('profiles', function() {
+    return Profile.find();
+  });
 
 
   Meteor.users.allow({
@@ -123,8 +142,14 @@ if (Meteor.isServer) {
     },
     remove: function(user_id, doc) {
       return user_id && doc.user_id == user_id;
-    }    
-  })
+    }
+  });
+
+  Profile._collection.allow({
+    insert: function(user_id, doc) {
+      return user_id && doc.user_id == user_id;
+    }
+  });
 
   // Meteor.methods({
   //   add_friend: function() {}

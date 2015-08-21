@@ -11,6 +11,9 @@ class @User extends Minimongoid
   @has_and_belongs_to_many: [
     {name: 'friends', class_name: 'User'}
   ]
+  @has_one: [
+    {name: 'profile', foreign_key: 'user_id'}
+  ]
 
   # instance methods
   # return true if user is friends with User where id==user_id
@@ -90,3 +93,14 @@ class @Ingredient extends Minimongoid
     if @recipe then @recipe.myRecipe() else false
 
 
+class @Profile extends Minimongoid
+  # indicate which collection to use
+  @_collection: new Meteor.Collection('profiles')
+
+  @defaults:
+    description: "The user hasn't provided a description yet."
+
+  # model relations
+  @belongs_to: [
+    {name: 'user'}
+  ]

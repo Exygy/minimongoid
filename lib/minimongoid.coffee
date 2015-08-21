@@ -90,6 +90,26 @@ class @Minimongoid
           if global[class_name]
             HasManyRelation.fromRelation(global[class_name].where(mod_selector, options), foreign_key, @id)
 
+    # set up has_one methods, e.g. user.recipes()
+    for has_one in @constructor.has_one
+      relation = has_one.name
+      selector = {}
+      unless foreign_key = has_one.foreign_key
+        foreign_key = "#{_.singularize(@constructor.to_s().toLowerCase())}_id"
+      if @constructor._object_id
+        selector[foreign_key] = new Meteor.Collection.ObjectID @id
+      else
+        selector[foreign_key] = @id
+      # set up default class name, e.g. "has_one: user" ==> 'User'
+      class_name = has_one.class_name || _.titleize(relation)
+      @[relation] = do(relation, selector, class_name) ->
+        (mod_selector = {}, options = {}) ->
+          # first consider any passed in selector options
+          mod_selector = _.extend mod_selector, selector
+          # e.g. where {user_id: @id}
+          if global[class_name]
+            global[class_name].first(mod_selector, options)
+
 
     # set up HABTM methods, e.g. user.friends()
     for habtm in @constructor.has_and_belongs_to_many
@@ -117,7 +137,8 @@ class @Minimongoid
 
 
   # /--------------------
-  # DEPRECATED: r() and related() methods 
+  # DEPRECATED: r() and related() methods
+  #             Also does not support has_one.
   # --------------------
 
   # alias to @related
@@ -283,6 +304,7 @@ class @Minimongoid
 
   @belongs_to: []
   @has_many: []
+  @has_one: []
   @has_and_belongs_to_many: []
 
   @embedded_in: null

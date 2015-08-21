@@ -1,6 +1,6 @@
 Tinytest.add "can create a basic model", (test) ->
   Recipe.create {name: 'Apple Pie'}
-  recipe = Recipe.first {name: 'Apple Pie'} 
+  recipe = Recipe.first {name: 'Apple Pie'}
   test.equal recipe.name, 'Apple Pie'
 
 Tinytest.add "can have embedded models", (test) ->

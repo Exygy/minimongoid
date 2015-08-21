@@ -12,7 +12,7 @@ class @User extends Minimongoid
     {name: 'friends', class_name: 'User'}
   ]
 
-  # instance methods 
+  # instance methods
   # return true if user is friends with User where id==user_id
   friendsWith: (user_id) ->
     _.contains @friend_ids, user_id
@@ -43,7 +43,7 @@ class @Recipe extends Minimongoid
     name: ''
     cooking_time: '30 mins'
 
-  # titleize the name before creation   
+  # titleize the name before creation
   @before_create: (attr) ->
     attr.name = _.titleize(attr.name)
     attr

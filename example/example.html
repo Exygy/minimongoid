@@ -9,7 +9,7 @@
 </body>
 
 
-<!-- Main template --> 
+<!-- Main template -->
 <template name="main">
   {{#if currentUser}}
     <ul class="nav nav-tabs" id="tabs">
@@ -26,7 +26,7 @@
         {{> loginButtons}}
       </li>
     </ul>
-    
+
     <div class="tab-content">
         <div id="recipes" class="active tab-pane">
           {{> recipes}}
@@ -93,7 +93,7 @@
 <template name="recipe">
   <div class="well">
     <h2>
-      {{name}} 
+      {{name}}
       {{#if myRecipe}}
         <a class="delete-recipe" href="#">&times;</a>
       {{else}}

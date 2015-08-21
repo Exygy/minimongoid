@@ -37,7 +37,7 @@ if (Meteor.isClient) {
         User.current().push(attr);
       }
       // $('#friend-nav').tab('show');
-    }    
+    }
   });
 
 
@@ -51,7 +51,7 @@ if (Meteor.isClient) {
     'click .ingredient-save' : function(e, t) {
       e.preventDefault();
       var ingredient = {name: $(t.find('.ingredient-name')).val()};
-      var quantity = $(t.find('.ingredient-quantity')).val(); 
+      var quantity = $(t.find('.ingredient-quantity')).val();
       if (quantity) ingredient.quantity = parseInt(quantity);
       // this = this Recipe
       this.push({
@@ -109,7 +109,7 @@ if (Meteor.isServer) {
       if (doc._id !== Meteor.userId()) {
         return false;
       } else {
-        return true; 
+        return true;
       }
     }
   });

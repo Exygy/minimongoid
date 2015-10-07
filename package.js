@@ -1,7 +1,7 @@
 Package.describe({
   name: "kaptron:minimongoid",
   summary: "Mongoid inspired model architecture",
-  version: "0.9.6",
+  version: "0.9.8",
   git: "https://github.com/Exygy/minimongoid.git"
 });
 
